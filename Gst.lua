@@ -1,190 +1,410 @@
---// Sharp Black & White GUI Library | By Bytox
 local SharpUI = {}
 SharpUI.__index = SharpUI
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local MarketplaceService = game:GetService("MarketplaceService")
+local UserInputService = game:GetService("UserInputService")
 
--- Helper function لإنشاء العناصر بسرعة
 local function Create(class, props)
-    local obj = Instance.new(class)
-    for k,v in pairs(props or {}) do
-        if k ~= "Parent" then
-            obj[k] = v
-        end
-    end
-    if props and props.Parent then
-        obj.Parent = props.Parent
-    end
-    return obj
+	local obj = Instance.new(class)
+	for k,v in pairs(props or {}) do
+		if k ~= "Parent" then
+			obj[k] = v
+		end
+	end
+	if props and props.Parent then
+		obj.Parent = props.Parent
+	end
+	return obj
 end
 
--- دالة لإنشاء GUI رئيسي
 function SharpUI:New(title)
-    local selfObj = setmetatable({}, SharpUI)
-    
-    -- ScreenGui
-    selfObj.ScreenGui = Create("ScreenGui", {Parent = game.CoreGui, Name = "SharpUI"})
-    
-    -- Main Frame
-    selfObj.MainFrame = Create("Frame", {
-        Parent = selfObj.ScreenGui,
-        Size = UDim2.new(0, 550, 0, 350),
-        Position = UDim2.new(0.5, -275, 0.5, -175),
-        BackgroundColor3 = Color3.fromRGB(0,0,0),
-        BorderColor3 = Color3.fromRGB(255,255,255),
-        BorderSizePixel = 2,
-        Active = true,
-        Draggable = true
-    })
-    
-    -- Title
-    selfObj.Title = Create("TextLabel", {
-        Parent = selfObj.MainFrame,
-        Size = UDim2.new(1,0,0,40),
-        BackgroundColor3 = Color3.fromRGB(0,0,0),
-        BorderColor3 = Color3.fromRGB(255,255,255),
-        BorderSizePixel = 2,
-        Text = title or "Ghost Hub",
-        TextColor3 = Color3.fromRGB(255,255,255),
-        Font = Enum.Font.SourceSansBold,
-        TextSize = 20
-    })
-    
-    -- Hide Button
-    selfObj.HideButton = Create("ImageButton", {
-        Parent = selfObj.ScreenGui,
-        Size = UDim2.new(0,40,0,40),
-        Position = UDim2.new(1,-60,1,-60),
-        BackgroundColor3 = Color3.fromRGB(0,0,0),
-        BorderColor3 = Color3.fromRGB(255,255,255),
-        BorderSizePixel = 2,
-        Image = "rbxassetid://89313692535877",
-        ZIndex = 10
-    })
-    
-    local visible = true
-    selfObj.HideButton.MouseButton1Click:Connect(function()
-        visible = not visible
-        selfObj.MainFrame.Visible = visible
-    end)
-    
-    -- Tab List
-    selfObj.TabList = Create("Frame", {
-        Parent = selfObj.MainFrame,
-        Position = UDim2.new(0,0,0,40),
-        Size = UDim2.new(0,130,1,-40),
-        BackgroundColor3 = Color3.fromRGB(0,0,0),
-        BorderColor3 = Color3.fromRGB(255,255,255),
-        BorderSizePixel = 2
-    })
-    
-    Create("UIListLayout", {Parent = selfObj.TabList, Padding = UDim.new(0,5), SortOrder = Enum.SortOrder.LayoutOrder, FillDirection = Enum.FillDirection.Vertical, HorizontalAlignment = Enum.HorizontalAlignment.Center})
-    
-    -- Content Frame
-    selfObj.Content = Create("Frame", {
-        Parent = selfObj.MainFrame,
-        Position = UDim2.new(0,130,0,40),
-        Size = UDim2.new(1,-130,1,-40),
-        BackgroundColor3 = Color3.fromRGB(0,0,0),
-        BorderColor3 = Color3.fromRGB(255,255,255),
-        BorderSizePixel = 2,
-        ClipsDescendants = true
-    })
-    
-    selfObj.Tabs = {}
-    return selfObj
+	local selfObj = setmetatable({}, SharpUI)
+	selfObj.ScreenGui = Create("ScreenGui", {Parent = game.CoreGui, Name = "SharpUI"})
+	selfObj.MainFrame = Create("Frame", {
+		Parent = selfObj.ScreenGui,
+		Size = UDim2.new(0, 550, 0, 350),
+		Position = UDim2.new(0.5, -275, 0.5, -175),
+		BackgroundColor3 = Color3.fromRGB(0,0,0),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2,
+		Active = true,
+		Draggable = true
+	})
+	selfObj.Title = Create("TextLabel", {
+		Parent = selfObj.MainFrame,
+		Size = UDim2.new(1,0,0,45),
+		BackgroundColor3 = Color3.fromRGB(0,0,0),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2,
+		Text = title or "Sharp Hub",
+		TextColor3 = Color3.fromRGB(255,255,255),
+		Font = Enum.Font.GothamBold,
+		TextXAlignment = Enum.TextXAlignment.Left,
+		TextSize = 20
+	})
+	selfObj.SubTitle = Create("TextLabel", {
+		Parent = selfObj.MainFrame,
+		Size = UDim2.new(1,0,0,20),
+		Position = UDim2.new(0,0,0,25),
+		BackgroundTransparency = 1,
+		Text = "by Bytox",
+		TextColor3 = Color3.fromRGB(200,200,200),
+		Font = Enum.Font.Gotham,
+		TextXAlignment = Enum.TextXAlignment.Left,
+		TextSize = 14
+	})
+	selfObj.HideButton = Create("ImageButton", {
+		Parent = selfObj.ScreenGui,
+		Size = UDim2.new(0,40,0,40),
+		Position = UDim2.new(1,-60,1,-60),
+		BackgroundColor3 = Color3.fromRGB(0,0,0),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2,
+		Image = "rbxassetid://89313692535877",
+		ZIndex = 10
+	})
+	local visible = true
+	selfObj.HideButton.MouseButton1Click:Connect(function()
+		visible = not visible
+		selfObj.MainFrame.Visible = visible
+	end)
+	selfObj.TabList = Create("ScrollingFrame", {
+		Parent = selfObj.MainFrame,
+		Position = UDim2.new(0,0,0,45),
+		Size = UDim2.new(0,130,1,-45),
+		BackgroundColor3 = Color3.fromRGB(0,0,0),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2,
+		ScrollBarThickness = 6,
+		ScrollBarImageColor3 = Color3.fromRGB(255,255,255),
+		CanvasSize = UDim2.new(0,0,0,0)
+	})
+	local tabLayout = Create("UIListLayout", {
+		Parent = selfObj.TabList,
+		Padding = UDim.new(0,6),
+		SortOrder = Enum.SortOrder.LayoutOrder
+	})
+	tabLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+		selfObj.TabList.CanvasSize = UDim2.new(0,0,0,tabLayout.AbsoluteContentSize.Y)
+	end)
+	selfObj.Content = Create("Frame", {
+		Parent = selfObj.MainFrame,
+		Position = UDim2.new(0,130,0,45),
+		Size = UDim2.new(1,-130,1,-45),
+		BackgroundColor3 = Color3.fromRGB(0,0,0),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2,
+		ClipsDescendants = true
+	})
+	selfObj.PageLayout = Create("UIPageLayout", {
+		Parent = selfObj.Content,
+		Animated = true,
+		Circular = false,
+		TweenTime = 0.3,
+		TouchInputEnabled = true,
+		ScrollWheelInputEnabled = true
+	})
+	selfObj.PageLayout.Stopped:Connect(function(currentPage)
+		for name, scrollFrame in pairs(selfObj.Tabs) do
+			if scrollFrame == currentPage then
+				for _, btn in pairs(selfObj.TabButtons) do
+					btn.BackgroundColor3 = Color3.fromRGB(0,0,0)
+				end
+				if selfObj.TabButtons[name] then
+					selfObj.TabButtons[name].BackgroundColor3 = Color3.fromRGB(30,30,30)
+				end
+				break
+			end
+		end
+	end)
+	selfObj.Tabs = {}
+	selfObj.TabButtons = {}
+	return selfObj
 end
 
--- دالة لإنشاء تبويب
 function SharpUI:AddTab(name)
-    local button = Create("TextButton", {
-        Parent = self.TabList,
-        Size = UDim2.new(1,-10,0,35),
-        Text = name,
-        BackgroundColor3 = Color3.fromRGB(0,0,0),
-        BorderColor3 = Color3.fromRGB(255,255,255),
-        BorderSizePixel = 2,
-        TextColor3 = Color3.fromRGB(255,255,255),
-        Font = Enum.Font.SourceSansBold,
-        TextSize = 17
-    })
-    
-    local scroll = Create("ScrollingFrame", {
-        Parent = self.Content,
-        Size = UDim2.new(1,0,1,0),
-        CanvasSize = UDim2.new(0,0,0,0),
-        ScrollBarThickness = 8,
-        ScrollBarImageColor3 = Color3.fromRGB(255,255,255),
-        BackgroundTransparency = 1,
-        Visible = false
-    })
-    
-    local list = Create("UIListLayout", {Parent = scroll, Padding = UDim.new(0,10), SortOrder = Enum.SortOrder.LayoutOrder})
-    list:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        scroll.CanvasSize = UDim2.new(0,0,0,list.AbsoluteContentSize.Y + 20)
-    end)
-    
-    button.MouseButton1Click:Connect(function()
-        for _, t in pairs(self.Content:GetChildren()) do
-            if t:IsA("ScrollingFrame") then t.Visible = false end
-        end
-        scroll.Visible = true
-    end)
-    
-    self.Tabs[name] = scroll
-    return scroll
+	local button = Create("TextButton", {
+		Parent = self.TabList,
+		Size = UDim2.new(1,-10,0,35),
+		Text = name,
+		BackgroundColor3 = Color3.fromRGB(0,0,0),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2,
+		TextColor3 = Color3.fromRGB(255,255,255),
+		Font = Enum.Font.GothamBold,
+		TextSize = 16
+	})
+	local scroll = Create("ScrollingFrame", {
+		Parent = self.Content,
+		Size = UDim2.new(1,0,1,0),
+		CanvasSize = UDim2.new(0,0,0,0),
+		ScrollBarThickness = 8,
+		ScrollBarImageColor3 = Color3.fromRGB(255,255,255),
+		BackgroundTransparency = 1
+	})
+	local list = Create("UIListLayout", {
+		Parent = scroll,
+		Padding = UDim.new(0,10),
+		SortOrder = Enum.SortOrder.LayoutOrder
+	})
+	list:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+		scroll.CanvasSize = UDim2.new(0,0,0,list.AbsoluteContentSize.Y + 20)
+	end)
+	self.TabButtons[name] = button
+	self.Tabs[name] = scroll
+	button.MouseButton1Click:Connect(function()
+		self.PageLayout:JumpTo(scroll)
+		for _, btn in pairs(self.TabButtons) do
+			btn.BackgroundColor3 = Color3.fromRGB(0,0,0)
+		end
+		button.BackgroundColor3 = Color3.fromRGB(30,30,30)
+	end)
+	if #self.Tabs == 1 then
+		button.BackgroundColor3 = Color3.fromRGB(30,30,30)
+		self.PageLayout:JumpTo(scroll)
+	end
+	return scroll
 end
 
--- دالة لإنشاء زر داخل تبويب
+-- إضافة زر
 function SharpUI:AddButton(tab, text, callback)
-    local Btn = Create("TextButton", {
-        Parent = tab,
-        Size = UDim2.new(1,0,0,40),
-        Text = text,
-        Font = Enum.Font.SourceSansBold,
-        TextSize = 16,
-        TextColor3 = Color3.fromRGB(255,255,255),
-        BackgroundColor3 = Color3.fromRGB(0,0,0),
-        BorderColor3 = Color3.fromRGB(255,255,255),
-        BorderSizePixel = 2
-    })
-    Btn.MouseButton1Click:Connect(callback)
-    return Btn
+	local Btn = Create("TextButton", {
+		Parent = tab,
+		Size = UDim2.new(1,0,0,40),
+		Text = text,
+		Font = Enum.Font.GothamBold,
+		TextSize = 16,
+		TextColor3 = Color3.fromRGB(255,255,255),
+		BackgroundColor3 = Color3.fromRGB(10,10,10),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2
+	})
+	Btn.MouseButton1Click:Connect(callback)
+	return Btn
 end
 
--- دالة لإنشاء TextBox داخل تبويب
-function SharpUI:AddTextBox(tab, placeholder, callback)
-    local box = Create("TextBox", {
-        Parent = tab,
-        Size = UDim2.new(1,0,0,30),
-        PlaceholderText = placeholder,
-        BackgroundColor3 = Color3.fromRGB(0,0,0),
-        BorderColor3 = Color3.fromRGB(255,255,255),
-        TextColor3 = Color3.fromRGB(255,255,255),
-        ClearTextOnFocus = false,
-        Font = Enum.Font.SourceSans,
-        TextSize = 16
-    })
-    box.FocusLost:Connect(function(enter)
-        if enter then
-            callback(box.Text)
-        end
-    end)
-    return box
+-- إضافة Toggle
+function SharpUI:AddToggle(tab, text, default, callback)
+	local toggleFrame = Create("Frame", {
+		Parent = tab,
+		Size = UDim2.new(1,0,0,40),
+		BackgroundColor3 = Color3.fromRGB(0,0,0),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2
+	})
+	local title = Create("TextLabel", {
+		Parent = toggleFrame,
+		Size = UDim2.new(0.7,0,1,0),
+		Position = UDim2.new(0,10,0,0),
+		Text = text,
+		TextColor3 = Color3.fromRGB(255,255,255),
+		BackgroundTransparency = 1,
+		Font = Enum.Font.GothamBold,
+		TextSize = 16,
+		TextXAlignment = Enum.TextXAlignment.Left
+	})
+	local btn = Create("TextButton", {
+		Parent = toggleFrame,
+		Size = UDim2.new(0.25,0,0.7,0),
+		Position = UDim2.new(0.72,0,0.15,0),
+		Text = default and "ON" or "OFF",
+		TextColor3 = Color3.fromRGB(255,255,255),
+		BackgroundColor3 = default and Color3.fromRGB(0,255,0) or Color3.fromRGB(80,0,0),
+		Font = Enum.Font.GothamBold,
+		TextSize = 14,
+		BorderSizePixel = 0
+	})
+	btn.MouseButton1Click:Connect(function()
+		default = not default
+		btn.Text = default and "ON" or "OFF"
+		btn.BackgroundColor3 = default and Color3.fromRGB(0,255,0) or Color3.fromRGB(80,0,0)
+		callback(default)
+	end)
+	return toggleFrame
 end
 
--- Example: Usage
---[[
-local UI = SharpUI:New("Ghost Hub v1.2")
-local playerTab = UI:AddTab("Player")
-UI:AddButton(playerTab, "Run Script", function()
-    print("Button clicked!")
-end)
-UI:AddTextBox(playerTab, "Enter Name", function(text)
-    print("TextBox:", text)
-end)
-]]
+-- إضافة Slider
+function SharpUI:AddSlider(tab, text, min, max, default, callback)
+	local frame = Create("Frame", {
+		Parent = tab,
+		Size = UDim2.new(1,0,0,45),
+		BackgroundColor3 = Color3.fromRGB(0,0,0),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2
+	})
+	local label = Create("TextLabel", {
+		Parent = frame,
+		Size = UDim2.new(1,-10,0,20),
+		Position = UDim2.new(0,10,0,0),
+		Text = text.." : "..default,
+		TextColor3 = Color3.fromRGB(255,255,255),
+		BackgroundTransparency = 1,
+		Font = Enum.Font.GothamBold,
+		TextSize = 16,
+		TextXAlignment = Enum.TextXAlignment.Left
+	})
+	local bar = Create("Frame", {
+		Parent = frame,
+		Size = UDim2.new(0.9,0,0,12),
+		Position = UDim2.new(0.05,0,0,28),
+		BackgroundColor3 = Color3.fromRGB(40,40,40),
+		BorderSizePixel = 0
+	})
+	Instance.new("UICorner", bar).CornerRadius = UDim.new(0,6)
+	local fill = Create("Frame", {
+		Parent = bar,
+		Size = UDim2.new((default-min)/(max-min),0,1,0),
+		BackgroundColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 0
+	})
+	Instance.new("UICorner", fill).CornerRadius = UDim.new(0,6)
+	local handle = Create("Frame", {
+		Parent = fill,
+		Size = UDim2.new(0,16,0,16),
+		AnchorPoint = Vector2.new(0.5,0.5),
+		Position = UDim2.new(1,0,0.5,0),
+		BackgroundColor3 = Color3.fromRGB(150,150,150),
+		BorderSizePixel = 0
+	})
+	Instance.new("UICorner", handle).CornerRadius = UDim.new(1,0)
+	local dragging = false
+	local function updateInput(input)
+		local rel = math.clamp((input.Position.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X, 0, 1)
+		local val = math.floor(min + (max - min) * rel)
+		fill.Size = UDim2.new(rel,0,1,0)
+		label.Text = text.." : "..val
+		callback(val)
+	end
+	bar.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			updateInput(input)
+		end
+	end)
+	bar.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = false
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+			updateInput(input)
+		end
+	end)
+	return frame
+end
+
+-- إضافة Dropdown
+function SharpUI:AddDropdown(tab, text, options, callback)
+	local frame = Create("Frame", {
+		Parent = tab,
+		Size = UDim2.new(1,0,0,40),
+		BackgroundColor3 = Color3.fromRGB(0,0,0),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2
+	})
+	local title = Create("TextLabel", {
+		Parent = frame,
+		Size = UDim2.new(0.7,0,1,0),
+		Position = UDim2.new(0,10,0,0),
+		Text = text,
+		TextColor3 = Color3.fromRGB(255,255,255),
+		BackgroundTransparency = 1,
+		Font = Enum.Font.GothamBold,
+		TextSize = 16,
+		TextXAlignment = Enum.TextXAlignment.Left
+	})
+	local btn = Create("TextButton", {
+		Parent = frame,
+		Size = UDim2.new(0.25,0,0.7,0),
+		Position = UDim2.new(0.72,0,0.15,0),
+		Text = "▼",
+		TextColor3 = Color3.fromRGB(255,255,255),
+		BackgroundColor3 = Color3.fromRGB(30,30,30),
+		Font = Enum.Font.GothamBold,
+		TextSize = 14,
+		BorderSizePixel = 0
+	})
+	local dropdownFrame = Create("ScrollingFrame", {
+		Parent = frame,
+		Size = UDim2.new(1,0,0,0),
+		Position = UDim2.new(0,0,1,0),
+		CanvasSize = UDim2.new(0,0,0,0),
+		ScrollBarThickness = 6,
+		BackgroundColor3 = Color3.fromRGB(20,20,20),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2,
+		Visible = false
+	})
+	local listLayout = Create("UIListLayout", {
+		Parent = dropdownFrame,
+		Padding = UDim.new(0,2),
+		SortOrder = Enum.SortOrder.LayoutOrder
+	})
+	listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+		dropdownFrame.CanvasSize = UDim2.new(0,0,0,listLayout.AbsoluteContentSize.Y)
+		if listLayout.AbsoluteContentSize.Y > 150 then
+			dropdownFrame.Size = UDim2.new(1,0,0,150)
+		else
+			dropdownFrame.Size = UDim2.new(1,0,0,listLayout.AbsoluteContentSize.Y)
+		end
+	end)
+	btn.MouseButton1Click:Connect(function()
+		dropdownFrame.Visible = not dropdownFrame.Visible
+	end)
+	for i, option in ipairs(options) do
+		local optBtn = Create("TextButton", {
+			Parent = dropdownFrame,
+			Size = UDim2.new(1,0,0,30),
+			Text = option,
+			Font = Enum.Font.GothamBold,
+			TextSize = 14,
+			TextColor3 = Color3.fromRGB(255,255,255),
+			BackgroundColor3 = Color3.fromRGB(40,40,40),
+			BorderSizePixel = 0
+		})
+		optBtn.MouseButton1Click:Connect(function()
+			btn.Text = option
+			callback(option)
+			dropdownFrame.Visible = false
+		end)
+	end
+	return frame
+end
+
+-- إضافة ميزة الصور مع إدخال Asset ID
+function SharpUI:AddImage(tab, defaultId)
+	local frame = Create("Frame", {
+		Parent = tab,
+		Size = UDim2.new(1,0,0,120),
+		BackgroundColor3 = Color3.fromRGB(0,0,0),
+		BorderColor3 = Color3.fromRGB(255,255,255),
+		BorderSizePixel = 2
+	})
+	local image = Create("ImageLabel", {
+		Parent = frame,
+		Size = UDim2.new(1,0,0,100),
+		Image = "rbxassetid://"..(defaultId or "0"),
+		BackgroundColor3 = Color3.fromRGB(20,20,20),
+		BorderSizePixel = 0
+	})
+	local input = Create("TextBox", {
+		Parent = frame,
+		Size = UDim2.new(1,0,0,20),
+		Position = UDim2.new(0,0,0,100),
+		Text = defaultId or "",
+		TextColor3 = Color3.fromRGB(255,255,255),
+		BackgroundColor3 = Color3.fromRGB(30,30,30),
+		ClearTextOnFocus = false,
+		Font = Enum.Font.Gotham,
+		TextSize = 14
+	})
+	input.FocusLost:Connect(function()
+		local id = input.Text
+		image.Image = "rbxassetid://"..id
+	end)
+	return frame
+end
 
 return SharpUI
