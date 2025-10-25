@@ -1,53 +1,35 @@
--- Load the library from the URL
-local SharpUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/ByxCommunityZz6/GstLib/refs/heads/main/Gst.lua"))()
+-- Load Gst Library
+local GstLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ByxCommunityZz6/GstLib/refs/heads/main/Gst.lua"))()
 
--- Create the main GUI
-local UI = SharpUI:New("Ghost Hub v1.2")
+-- Create main window
+local Window = GstLib:New("Gst Example | Bytox")
 
--- Add a Player tab
-local PlayerTab = UI:AddTab("Player")
+-- Create main tab
+local Tab = Window:AddTab("Main")
 
--- Example: Button to run a specific script
-UI:AddButton(PlayerTab, "Run Fly Script", function()
-    pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
-    end)
+-- Default image ID
+local imageId = "rbxassetid://13497010343"
+
+-- Add image to UI
+local Image = GstLib:AddImage(Tab, imageId)
+
+-- Textbox to change the image ID
+GstLib:AddBox(Tab, "Enter Image ID", function(text)
+	imageId = "rbxassetid://"..text
+	Image.Image = imageId -- Update image instantly
 end)
 
--- Example: TextBox to enter a player name
-UI:AddTextBox(PlayerTab, "Enter Player Name", function(text)
-    print("Player Name entered:", text)
+-- Simple button
+GstLib:AddButton(Tab, "Print Current Image ID", function()
+	print("Current Image ID:", imageId)
 end)
 
--- Add a Scripts tab
-local ScriptsTab = UI:AddTab("Scripts")
-
-local scriptsList = {
-    {Name = "ESP Script", URL = "https://pastebin.com/raw/cxYZp5wY"},
-    {Name = "Dark Spawner", URL = "https://raw.githubusercontent.com/iwantsom3/script/refs/heads/main/Gag"}
-}
-
-for _, s in ipairs(scriptsList) do
-    UI:AddButton(ScriptsTab, s.Name, function()
-        pcall(function()
-            loadstring(game:HttpGet(s.URL))()
-        end)
-    end)
-end
-
--- Add an Execute tab
-local ExecuteTab = UI:AddTab("GST Execute")
-
-local editor = UI:AddTextBox(ExecuteTab, "Write your script here...", function(text)
-    -- Nothing here, just a placeholder
+-- Dropdown example
+GstLib:AddDropdown(Tab, "Choose Option", {"Option 1", "Option 2", "Option 3"}, function(selected)
+	print("Selected:", selected)
 end)
 
-UI:AddButton(ExecuteTab, "Execute Script", function()
-    if editor.Text ~= "" then
-        pcall(function()
-            loadstring(editor.Text)()
-        end)
-    end
+-- Slider example
+GstLib:AddSlider(Tab, "Speed", 0, 100, 50, function(val)
+	print("Speed value:", val)
 end)
-
-print("Ghost Hub GUI loaded successfully!")
