@@ -13,7 +13,7 @@ function Library:Setup()
 
 	self.Window = UI:CreateWindow({
 		Title = "Bytox Hub v1.8",
-		Icon = "rbxassetid://128278170341835",
+		Icon = "rbxassetid://80386265546973",
 		Author = (getgenv().premium and "Premium" or "Grow a Garden") .. " | " .. version,
 		Folder = "BytoxHub",
 		Size = UDim2.fromOffset(580, 460),
